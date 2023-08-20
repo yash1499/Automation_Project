@@ -1,0 +1,5 @@
+---
+- name: Reboot after patching
+  reboot:
+    reboot_timeout: 60
+    msg: "Rebooting the system after patching is complete"

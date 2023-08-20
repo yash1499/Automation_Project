@@ -1,0 +1,28 @@
+---
+- name: Insert block of text in /etc/rsyslog.conf
+  blockinfile:
+    path: /etc/rsyslog.conf
+    marker: "# {mark} ANSIBLE MANAGED BLOCK"
+    insertafter: EOF
+    block: "{{ rsyslog_conf_block }}"
+
+- name: Set ownership and permissions on /etc/rsyslog.d directory
+  file:
+    path: /etc/rsyslog.d
+    owner: root
+    group: root
+    mode: "{{ rsyslog_d_permissions }}"
+    recurse: yes
+
+- name: Set permissions on /var/log directory
+  file:
+    path: /var/log
+    owner: root
+    group: root
+    mode: "{{ var_log_permissions }}"
+
+# The following task notifies the handler to restart the rsyslog service
+- name: Restart rsyslog service
+  service:
+    name: rsyslog
+    state: restarted

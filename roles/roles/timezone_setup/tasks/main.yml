@@ -1,0 +1,18 @@
+# timezone/tasks/main.yml
+---
+- name: Check if the operating system is CentOS or RedHat
+  assert:
+    that:
+      - ansible_distribution in ['CentOS', 'RedHat']
+  ignore_errors: true
+  register: os_check_result
+
+- name: Set up the time zone for CentOS or RedHat
+  when: os_check_result is success
+  lineinfile:
+    path: /etc/localtime
+    line: "ZONE=\"{{ timezone }}\""
+    create: yes
+  notify:
+    - Restart systemd-timesyncd
+

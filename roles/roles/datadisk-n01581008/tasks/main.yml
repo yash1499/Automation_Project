@@ -1,0 +1,30 @@
+---
+# tasks file for datadisk-n01581008
+- name: Create partitions
+  parted:
+    device: /dev/{{ item.device }}
+    number: "{{ item.number }}"
+    state: present
+    part_end: "{{ item.size }}"
+  loop:
+    - { device: "sdb", number: 1, size: "{{ partition1_size }}" }
+    - { device: "sdb", number: 2, size: "{{ partition2_size }}" }
+  when: ansible_devices['sdb'].size > partition1_size | to_bytes and ansible_devices['sdb'].size > partition2_size | to_bytes
+
+- name: Format partitions
+  filesystem:
+    fstype: "{{ item.format }}"
+    dev: "/dev/{{ item.device }}{{ item.number }}"
+  loop:
+    - { device: "sdb", number: 1, format: "{{ partition1_format }}" }
+    - { device: "sdb", number: 2, format: "{{ partition2_format }}" }
+
+- name: Mount partitions
+  mount:
+    path: "{{ item.mount_point }}"
+    src: "/dev/{{ item.device }}{{ item.number }}"
+    fstype: "{{ item.format }}"
+    state: mounted
+  loop:
+    - { device: "sdb", number: 1, mount_point: "{{ partition1_mount_point }}", format: "{{ partition1_format }}" }
+    - { device: "sdb", number: 2, mount_point: "{{ partition2_mount_point }}", format: "{{ partition2_format }}" }

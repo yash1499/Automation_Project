@@ -1,0 +1,40 @@
+# timezone_setup/tasks/main.yml
+---
+- block:
+    - name: Add "export TMOUT={{ tmout_value }}" to /etc/profile
+      lineinfile:
+        path: /etc/profile
+        line: 'export TMOUT={{ tmout_value }}'
+        insertafter: EOF
+      register: tmout_changed
+    - name: Replace "umask" line in /etc/profile
+      replace:
+        path: /etc/profile
+        regexp: '^umask .*'
+        replace: 'umask {{ umask_value }}'
+      register: umask_changed
+  rescue:
+    - name: Rollback "export TMOUT={{ tmout_value }}" if it was added
+      lineinfile:
+        path: /etc/profile
+        line: 'export TMOUT={{ tmout_value }}'
+        state: absent
+      when: tmout_changed is defined and tmout_changed is changed
+    - name: Rollback "umask" if it was changed
+      replace:
+        path: /etc/profile
+        regexp: '^umask {{ umask_value }}'
+        replace: 'umask original_umask'
+      when: umask_changed is defined and umask_changed is changed
+    - name: Add "umask {{ umask_bash_value }}" to ~/.bash_profile
+      lineinfile:
+        path: ~/.bash_profile
+        line: 'umask {{ umask_bash_value }}'
+      register: umask_bash_changed
+  always:
+    - name: Source /etc/profile to apply changes immediately
+      shell: source /etc/profile
+      changed_when: false
+    - name: Display a message indicating completion
+      debug:
+        msg: "Playbook execution completed."

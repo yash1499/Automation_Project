@@ -1,0 +1,9 @@
+---
+# defaults file for datadisk-n01581008
+partition1_size: 4G
+partition1_format: xfs
+partition1_mount_point: /part1
+
+partition2_size: 5G
+partition2_format: ext4
+partition2_mount_point: /part2

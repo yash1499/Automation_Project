@@ -1,0 +1,8 @@
+# timezone_setup/handlers/main.yml
+---
+- name: Restart systemd-timesyncd
+  systemd:
+    name: systemd-timesyncd
+    state: restarted
+  become: yes
+

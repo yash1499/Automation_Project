@@ -1,0 +1,7 @@
+---
+rsyslog_conf_block: |
+  $FileCreateMode 0640
+
+rsyslog_d_permissions: "0640"
+
+var_log_permissions: "0775"

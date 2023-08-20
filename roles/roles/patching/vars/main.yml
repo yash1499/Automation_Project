@@ -1,0 +1,5 @@
+---
+patch_allowed_os:
+  - CentOS
+  - RedHat
+

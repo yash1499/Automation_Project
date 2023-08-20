@@ -1,0 +1,18 @@
+# patching/tasks/main.yml
+---
+- name: Patching on CentOS/RedHat OS
+  package:
+    name: "*"
+    state: latest
+  when: ansible_distribution in patch_allowed_os
+  register: patch_result
+
+- name: Display patching result
+  debug:
+    var: patch_result
+
+- name: Reboot after patching
+  reboot:
+    reboot_timeout: 60
+    msg: "Rebooting the system after patching is complete"
+  when: patch_result is changed

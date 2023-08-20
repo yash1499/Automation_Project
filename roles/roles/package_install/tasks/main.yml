@@ -1,0 +1,8 @@
+---
+- name: Install packages if OS is CentOS or RedHat
+  package:
+    name: "{{ item }}"
+    state: present
+  when: ansible_distribution in ['CentOS', 'RedHat']
+  loop: "{{ packages_to_install }}"
+
