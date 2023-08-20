@@ -1,0 +1,12 @@
+---
+- name: Playbook for Package Management and Patching
+  hosts: "{{ lookup('env', 'REMOTE_HOSTS') }}"
+  remote_user: "{{ lookup('env', 'REMOTE_USER') }}"
+  become: true
+  
+  roles:
+    - role: D:/Humber/Automation/assignment1-n01581008/roles/roles/datadisk-n01581008
+    - role: D:/Humber/Automation/assignment1-n01581008/roles/roles/profile-n01581008
+    - role: D:/Humber/Automation/assignment1-n01581008/roles/roles/user-n01581008
+    - role: D:/Humber/Automation/assignment1-n01581008/roles/roles/webserver-n01581008
+
